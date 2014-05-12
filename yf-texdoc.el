@@ -32,15 +32,15 @@
 (defvar yf/texdoc-path-to-tlpdb "/usr/local/texlive/2012/texmf-dist/scripts/texdoc/"
   "Path to the \"Data.tlpdb.lua\" file")
 
-(defvar yf/texdoc--packages nil "Cache for package list")
-(defun yf/texdoc--packages ()
-  (or yf/texdoc--packages
-      (setq yf/texdoc-packages
-            (split-string
-             (shell-command-to-string
-              (format
-               "cd \"%s\"; lua  -e 'a,b,c = dofile(\"Data.tlpdb.lua\")' -e \"for k,v in pairs(c) do print(k) end\""
-               yf/texdoc-path-to-tlpdb))))))
+(let ((yf/texdoc--packages))
+  (defun yf/texdoc--packages ()
+    (or yf/texdoc--packages
+        (setq yf/texdoc--packages
+              (split-string
+               (shell-command-to-string
+                (format
+                 "cd \"%s\"; lua  -e 'a,b,c = dofile(\"Data.tlpdb.lua\")' -e \"for k,v in pairs(c) do print(k) end\""
+                 yf/texdoc-path-to-tlpdb)))))))
 
 (defun yf/texdoc-packages ()
   "Return a list of known packages."
