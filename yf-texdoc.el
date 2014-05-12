@@ -29,34 +29,12 @@
   (interactive (list (ido-completing-read "Package: " (yf/texdoc-packages))))
   (call-process-shell-command "texdoc" nil 0 nil package))
 
-
 (defvar yf/texdoc-path-to-tlpdb "/usr/local/texlive/2012/texmf-dist/scripts/texdoc/"
   "Path to the \"Data.tlpdb.lua\" file")
 
 (defvar yf/texdoc--packages nil "Cache for package list")
 (defun yf/texdoc--packages ()
   (or yf/texdoc--packages
-      ;; (with-temp-buffer
-      ;;   ;; (call-process "tlmgr" nil t nil "info" "--list" "--only-installed")
-      ;;   ;; (goto-char (point-min))
-      ;;   ;; (while (re-search-forward "^i \\([^:]+\\): \\(.*\\)$" nil t)
-      ;;   ;;   (push (cons (match-string 1) (match-string 2))
-      ;;   ;;         yf/texdoc-packages))
-
-
-      ;;   ;; (call-process "texdoc" nil t nil "-M" "-l" "")
-      ;;   ;; (goto-char (point-min))
-      ;;   ;; (while (not (eobp))
-      ;;   ;;   (let (file package desc)
-      ;;   ;;     (search-forward "\t" nil nil 2)
-      ;;   ;;     (setq file (buffer-substring
-      ;;   ;;                 (point)
-      ;;   ;;                 (progn (search-forward "\t") (1- (point)))))
-      ;;   ;;     (setq package (file-name-nondirectory file))
-      ;;   ;;     (search-forward "\t") ; skip over lang
-      ;;   ;;     (buffer-substring (point) (progn (forward-line) (1- (point))))
-      ;;   ;;     (push (cons package desc) yf/texdoc-packages)))
-      ;;   )
       (setq yf/texdoc-packages
             (split-string
              (shell-command-to-string
