@@ -24,13 +24,17 @@
 
 ;;; Code:
 
+(require 'ido)
+(require 's)
+
 (defun yf/texdoc (package)
   "Opens the LaTeX PACKAGE documentation via the texdoc utility."
   (interactive (list (ido-completing-read "Package: " (yf/texdoc-packages))))
   (call-process-shell-command "texdoc" nil 0 nil package))
 
-(defvar yf/texdoc-path-to-tlpdb "/usr/local/texlive/2012/texmf-dist/scripts/texdoc/"
-  "Path to the \"Data.tlpdb.lua\" file")
+(defvar yf/texdoc-path-to-tlpdb 
+  (s-trim (shell-command-to-string "kpsewhich Data.tlpdb.lua")) 
+  "Full path to the \"Data.tlpdb.lua\" file")
 
 (let ((yf/texdoc--packages))
   (defun yf/texdoc--packages ()
@@ -39,7 +43,7 @@
               (split-string
                (shell-command-to-string
                 (format
-                 "cd \"%s\"; lua  -e 'a,b,c = dofile(\"Data.tlpdb.lua\")' -e \"for k,v in pairs(c) do print(k) end\""
+                 "lua  -e 'a,b,c = dofile(\"%s\")' -e \"for k,v in pairs(c) do print(k) end\""
                  yf/texdoc-path-to-tlpdb)))))))
 
 (defun yf/texdoc-packages ()
